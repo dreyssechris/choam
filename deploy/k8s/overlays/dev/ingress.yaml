@@ -31,4 +31,4 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /financetracker/api
+      - /financetracker
