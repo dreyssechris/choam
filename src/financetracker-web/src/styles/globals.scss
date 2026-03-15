@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas,
+    "Liberation Mono", Menlo, monospace;
+}
+
+// Domain-specific semantic colors (not covered by Quasar brand)
+:root {
+  --income: #85bb65;
+  --expense: #b96565;
+  --investment: #6380bf;
+  --bordercolor: #303134;
+  --card-bg: #161a20;
+}
+
+.text-income     { color: var(--income); }
+.text-expense    { color: var(--expense); }
+.text-investment { color: var(--investment); }

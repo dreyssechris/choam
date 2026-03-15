@@ -1,0 +1,24 @@
+.transaction-table {
+  background: transparent;
+
+  // Fixed layout: column widths are strictly enforced
+  .q-table {
+    table-layout: fixed;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+// Mobile card layout
+.transaction-card {
+  background: var(--card-bg);
+
+  .text-caption {
+    font-size: 0.75rem;
+  }
+}

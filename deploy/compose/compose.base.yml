@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: financetracker-pg
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ../../src
+      dockerfile: FinanceTracker.Presentation/Dockerfile
+    container_name: financetracker-api
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8080"
+
+  web:
+    build:
+      context: ../../src/financetracker-web
+      dockerfile: Dockerfile
+    container_name: financetracker-web
+    restart: unless-stopped
+    expose:
+      - "5173"
+    depends_on:
+      - api
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: financetracker-pgadmin
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+
+volumes:
+  pg-data:

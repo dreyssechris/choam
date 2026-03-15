@@ -1,0 +1,42 @@
+services:
+  db:
+    ports:
+      - "5433:5432"
+
+  api:
+    ports:
+      - "8080:8080"
+    build: 
+      target: dev
+    volumes:
+      - ../../src:/src:cached
+      - nuget-cache:/root/.nuget/packages
+      - nuget-http-cache:/root/.local/share/NuGet/v3-cache
+
+  web:
+    ports:
+      - "5173:5173"
+    build:
+        target: dev
+    volumes:
+      - ../../src/financetracker-web:/app:cached
+      - /app/node_modules
+    environment:
+      VITE_API_BASE_URL: /api
+
+  devtools:
+    build:
+      context: ../..
+      dockerfile: .devcontainer/Dockerfile.devtools
+    container_name: financetracker-devtools
+    volumes:
+      - ../..:/workspaces/FinanceTracker:cached
+      - nuget-cache:/root/.nuget/packages
+      - nuget-http-cache:/root/.local/share/NuGet/v3-cache
+    working_dir: /workspaces/FinanceTracker
+    command: sleep infinity
+
+volumes:
+  nuget-cache:
+  nuget-http-cache:
+

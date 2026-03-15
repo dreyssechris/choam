@@ -1,0 +1,23 @@
+# .NET
+**/bin/
+**/obj/
+**/publish/
+
+# IDE
+**/.vs/
+**/.idea/
+**/.vscode/
+
+# Git
+.git
+.gitignore
+
+# Frontend
+financetracker-web/node_modules
+financetracker-web/dist
+financetracker-web/.vite
+financetracker-web/coverage
+
+# OS
+.DS_Store
+Thumbs.db

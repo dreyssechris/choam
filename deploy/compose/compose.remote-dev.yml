@@ -1,0 +1,32 @@
+services:
+  web:
+    environment:
+      VITE_API_BASE_URL: /financetracker/api
+      VITE_HMR_HOST: dev.chrispicloud.dev
+
+  caddy:
+    build:
+      context: ../../deploy/caddy
+      dockerfile: Dockerfile.caddy
+    container_name: caddy-dev
+    restart: unless-stopped
+    volumes:
+      - caddy-data-dev:/data
+      - caddy-config-dev:/config
+      - ../../deploy/caddy/Caddyfile.dev:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - web
+      - api
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-dev
+    restart: unless-stopped
+    command: ["tunnel","--config","/etc/cloudflared/config.yml","run"]
+    network_mode: service:caddy
+    volumes:
+      - /home/pi/.cloudflared:/etc/cloudflared
+
+volumes:
+  caddy-data-dev:
+  caddy-config-dev:

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet new sln -n FinanceTracker --force)",
+      "Bash(dotnet sln FinanceTracker.sln add src/FinanceTracker.Domain/FinanceTracker.Domain.csproj src/FinanceTracker.Application/FinanceTracker.Application.csproj src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj)",
+      "Bash(ls D:/git-repos/FinanceTracker/*.sln*)",
+      "Bash(dotnet sln FinanceTracker.slnx add src/FinanceTracker.Domain/FinanceTracker.Domain.csproj src/FinanceTracker.Application/FinanceTracker.Application.csproj src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj)",
+      "Bash(dotnet add src/FinanceTracker.Application/FinanceTracker.Application.csproj reference src/FinanceTracker.Domain/FinanceTracker.Domain.csproj)",
+      "Bash(dotnet add src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj reference src/FinanceTracker.Domain/FinanceTracker.Domain.csproj)",
+      "Bash(dotnet add src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj reference src/FinanceTracker.Application/FinanceTracker.Application.csproj)",
+      "Bash(dotnet add src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj reference src/FinanceTracker.Application/FinanceTracker.Application.csproj)",
+      "Bash(dotnet add src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj reference src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj)",
+      "Bash(dotnet add src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj package Npgsql.EntityFrameworkCore.PostgreSQL)",
+      "Bash(dotnet add src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj package Microsoft.EntityFrameworkCore.Tools)",
+      "Bash(dotnet tool update dotnet-ef)",
+      "Bash(dotnet add src/FinanceTracker.Application/FinanceTracker.Application.csproj package Microsoft.Extensions.DependencyInjection.Abstractions)",
+      "Bash(dotnet build FinanceTracker.slnx)",
+      "Bash(dotnet ef migrations add InitialCreate --project src/FinanceTracker.Infrastructure --startup-project src/FinanceTracker.Presentation --output-dir Migrations)",
+      "Bash(dotnet add src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj package Microsoft.EntityFrameworkCore.Design)",
+      "Bash(find D:git-reposFinanceTracker -maxdepth 2 -type f \\\\\\(-name .env* -o -name *.env \\\\\\))"
+    ]
+  }
+}
