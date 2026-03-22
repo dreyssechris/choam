@@ -26,12 +26,12 @@ async function add() {
 
   try {
     const created = await create.mutateAsync(trimmed)
-    if (created && typeof (created as any).id === 'number') {
-      emit('created', (created as any).id)
+    if (created) {
+      emit('created', created.id)
       name.value = ''
     }
-  } catch (err: any) {
-    error.value = err?.message || 'Failed to create category.'
+  } catch (err: unknown) {
+    error.value = err instanceof Error ? err.message : 'Failed to create category.'
   }
 }
 
