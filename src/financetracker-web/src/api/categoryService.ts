@@ -9,17 +9,17 @@ import type { Category } from '../contracts/categories';
 
 // GetAll()
 export function getCategories() {
-    return api<Category[]>('/api/categories'); 
+    return api<Category[]>('/categories'); 
 }
 
 // GetById()
 export function getCategoryById(id: number) {
-    return api<Category>(`/api/categories/${id}`); 
+    return api<Category>(`/categories/${id}`); 
 }
 
 // Create()
 export function createCategory(category: string) {
-    return api<Category>('/api/categories', {
+    return api<Category>('/categories', {
         method: 'POST',
         body: JSON.stringify({ name: category }),
     });
@@ -27,7 +27,7 @@ export function createCategory(category: string) {
 
 // Update() -> void, because backend returns no content
 export function updateCategory(id: number, name: string) {
-  return api<void>(`/api/categories/${id}`, {
+  return api<void>(`/categories/${id}`, {
     method: "PUT",
     body: JSON.stringify({ name }),
   });
@@ -35,7 +35,7 @@ export function updateCategory(id: number, name: string) {
 
 // Delete()
 export function deleteCategory(id: number) {
-  return api<void>(`/api/categories/${id}`, {
+  return api<void>(`/categories/${id}`, {
     method: "DELETE",
   });
 }

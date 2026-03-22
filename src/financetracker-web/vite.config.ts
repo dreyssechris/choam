@@ -45,10 +45,10 @@ export default defineConfig({
         }
       : true,
     proxy: {
-      '/api': {
+      '/financetracker/api': {
         target: 'http://api:8080',
         changeOrigin: true,
-        rewrite: (p: string) => p.replace(/^\/api/, ''),
+        rewrite: (p: string) => p.replace(/^\/financetracker\/api/, ''),
       },
     },
   },

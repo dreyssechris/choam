@@ -4,17 +4,17 @@ import type {Transaction, TransactionCreate, TransactionUpdate} from '../contrac
 
 // GetAll()
 export function getTransactions() {
-    return api<Transaction[]>('/api/transactions');
+    return api<Transaction[]>('/transactions');
 }
 
 // GetById()
 export function getTransactionById(id: number) {
-    return api<Transaction>(`/api/transactions/${id}`); 
+    return api<Transaction>(`/transactions/${id}`);
 }
 
 // Create()
 export function createTransaction(transaction: TransactionCreate) {
-    return api<Transaction>('/api/transactions', {
+    return api<Transaction>('/transactions', {
         method: 'POST',
         body: JSON.stringify(transaction),
     });
@@ -22,7 +22,7 @@ export function createTransaction(transaction: TransactionCreate) {
 
 // Update() -> void, because backend returns no content
 export function updateTransaction(id: number, transaction: TransactionUpdate) {
-    return api<void>(`/api/transactions/${id}`, {
+    return api<void>(`/transactions/${id}`, {
         method: "PUT",
         body: JSON.stringify(transaction),
     });
@@ -30,7 +30,7 @@ export function updateTransaction(id: number, transaction: TransactionUpdate) {
 
 // Delete()
 export function deleteTransaction(id: number) {
-    return api<void>(`/api/transactions/${id}`, {
+    return api<void>(`/transactions/${id}`, {
         method: "DELETE",
     });
 }
