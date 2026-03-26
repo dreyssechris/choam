@@ -14,13 +14,12 @@ jobs:
     name: Build & Push Production Images
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: docker/setup-qemu-action@v3
 
@@ -64,15 +63,23 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Update prod kustomization with version tag
-        run: |
-          cd deploy/k8s/overlays/prod
-          sed -i "s|newTag: .*|newTag: ${{ steps.version.outputs.VERSION }}|g" kustomization.yaml
+      - name: Checkout homelab repo
+        uses: actions/checkout@v4
+        with:
+          repository: dreyssechris/homelab
+          token: ${{ secrets.HOMELAB_PAT }}
+          path: homelab
 
-      - name: Commit and push updated manifests
+      - name: Update prod image tags in homelab
         run: |
+          sed -i "s|newTag: .*|newTag: ${{ steps.version.outputs.VERSION }}|g" \
+            homelab/deploy/k8s/apps/finance-tracker/overlays/prod/kustomization.yaml
+
+      - name: Commit and push to homelab
+        run: |
+          cd homelab
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add deploy/k8s/overlays/prod/kustomization.yaml
-          git diff --staged --quiet || git commit -m "chore(deploy): update prod images to ${{ steps.version.outputs.VERSION }}"
-          git push origin main
+          git add deploy/k8s/apps/finance-tracker/overlays/prod/kustomization.yaml
+          git diff --staged --quiet || git commit -m "chore(deploy): update finance-tracker prod to ${{ steps.version.outputs.VERSION }}"
+          git push
