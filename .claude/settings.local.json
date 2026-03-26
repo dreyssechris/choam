@@ -17,7 +17,8 @@
       "Bash(dotnet build FinanceTracker.slnx)",
       "Bash(dotnet ef migrations add InitialCreate --project src/FinanceTracker.Infrastructure --startup-project src/FinanceTracker.Presentation --output-dir Migrations)",
       "Bash(dotnet add src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj package Microsoft.EntityFrameworkCore.Design)",
-      "Bash(find D:git-reposFinanceTracker -maxdepth 2 -type f \\\\\\(-name .env* -o -name *.env \\\\\\))"
+      "Bash(find D:git-reposFinanceTracker -maxdepth 2 -type f \\\\\\(-name .env* -o -name *.env \\\\\\))",
+      "Read(//d/git-repos/homelab/**)"
     ]
   }
 }
