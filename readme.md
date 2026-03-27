@@ -54,7 +54,11 @@ Deployed on Raspberry Pi 4 via K3s with Flux CD for GitOps.
 4. Flux CD auto-deploys to `dev.chrispicloud.dev/financetracker`
 5. Create git tag (`v1.x.x`) → CD deploys to `chrispicloud.dev/financetracker`
 
-See [`deploy/k8s/SETUP.md`](deploy/k8s/SETUP.md) for Pi setup instructions.
+K8s manifests and infrastructure docs are in the [homelab](https://github.com/dreyssechris/homelab) repo.
+
+## Documentation
+
+See the [Wiki](https://github.com/dreyssechris/finance-tracker/wiki) for detailed documentation on architecture, development, and the roadmap.
 
 ## License
 
