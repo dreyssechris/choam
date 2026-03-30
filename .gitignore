@@ -436,6 +436,9 @@ choam-web/dist/
 choam-web/.vite/
 choam-web/coverage/
 
+# Generated app icons (source images, not tracked)
+appstore-images/
+
 # Env
 .env
 .env.*
