@@ -13,10 +13,10 @@
 .gitignore
 
 # Frontend
-financetracker-web/node_modules
-financetracker-web/dist
-financetracker-web/.vite
-financetracker-web/coverage
+choam-web/node_modules
+choam-web/dist
+choam-web/.vite
+choam-web/coverage
 
 # OS
 .DS_Store

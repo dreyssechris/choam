@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Choam.Application/Choam.Application.csproj" />
+    <Project Path="src/Choam.Domain/Choam.Domain.csproj" />
+    <Project Path="src/Choam.Infrastructure/Choam.Infrastructure.csproj" />
+    <Project Path="src/Choam.Presentation/Choam.Presentation.csproj" />
+  </Folder>
+</Solution>

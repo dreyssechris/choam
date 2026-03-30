@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: financetracker-pg
+    container_name: choam-pg
     restart: unless-stopped
     env_file:
       - ../../.env
@@ -16,8 +16,8 @@ services:
   api:
     build:
       context: ../../src
-      dockerfile: FinanceTracker.Presentation/Dockerfile
-    container_name: financetracker-api
+      dockerfile: Choam.Presentation/Dockerfile
+    container_name: choam-api
     restart: unless-stopped
     env_file:
       - ../../.env
@@ -32,9 +32,9 @@ services:
 
   web:
     build:
-      context: ../../src/financetracker-web
+      context: ../../src/choam-web
       dockerfile: Dockerfile
-    container_name: financetracker-web
+    container_name: choam-web
     restart: unless-stopped
     expose:
       - "5173"
@@ -43,7 +43,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:8
-    container_name: financetracker-pgadmin
+    container_name: choam-pgadmin
     restart: unless-stopped
     env_file:
       - ../../.env

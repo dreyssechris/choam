@@ -1,22 +1,22 @@
-# finance-tracker
+# CHOAM
 
-Personal finance tracking application built with .NET 10 and Vue 3.
+Personal finance management application built with .NET 10 and Vue 3. Named after the [Combine Honnete Ober Advancer Mercantiles](https://dune.fandom.com/wiki/CHOAM) from the Dune universe.
 
 ## Tech Stack
 
 **Backend:** ASP.NET Core 10 (Clean Architecture) with PostgreSQL 16
-**Frontend:** Vue 3 + Quasar 2 + TypeScript
+**Frontend:** Vue 3 + Quasar 2 + TypeScript (PWA)
 **Infrastructure:** K3s (Kubernetes) on Raspberry Pi, Flux CD (GitOps), GitHub Actions CI/CD
 
 ## Architecture
 
 ```
 src/
-├── FinanceTracker.Domain/          # Entities, value objects
-├── FinanceTracker.Application/     # Use cases, interfaces
-├── FinanceTracker.Infrastructure/  # EF Core, repositories
-├── FinanceTracker.Presentation/    # ASP.NET Core API
-└── financetracker-web/             # Vue 3 + Quasar SPA
+├── Choam.Domain/          # Entities, value objects
+├── Choam.Application/     # Use cases, interfaces
+├── Choam.Infrastructure/  # EF Core, repositories
+├── Choam.Presentation/    # ASP.NET Core API
+└── choam-web/             # Vue 3 + Quasar SPA (PWA)
 ```
 
 ## Development
@@ -34,11 +34,11 @@ src/
 ### Local Development (without Dev Container)
 ```bash
 # Backend
-dotnet restore FinanceTracker.slnx
-dotnet run --project src/FinanceTracker.Presentation
+dotnet restore Choam.slnx
+dotnet run --project src/Choam.Presentation
 
 # Frontend
-cd src/financetracker-web
+cd src/choam-web
 npm install
 npm run dev
 ```
@@ -51,14 +51,14 @@ Deployed on Raspberry Pi 4 via K3s with Flux CD for GitOps.
 1. Create feature branch, develop locally
 2. Open PR to `main` → CI runs (lint, type-check, build)
 3. Merge to `main` → CD builds ARM64 images, pushes to ghcr.io, updates dev manifests
-4. Flux CD auto-deploys to `dev.chrispicloud.dev/financetracker`
-5. Create git tag (`v1.x.x`) → CD deploys to `chrispicloud.dev/financetracker`
+4. Flux CD auto-deploys to `dev.chrispicloud.dev/choam`
+5. Create git tag (`v1.x.x`) → CD deploys to `chrispicloud.dev/choam`
 
 K8s manifests and infrastructure docs are in the [homelab](https://github.com/dreyssechris/homelab) repo.
 
 ## Documentation
 
-See the [Wiki](https://github.com/dreyssechris/finance-tracker/wiki) for detailed documentation on architecture, development, and the roadmap.
+See the [Wiki](https://github.com/dreyssechris/choam/wiki) for detailed documentation on architecture, development, and the roadmap.
 
 ## License
 

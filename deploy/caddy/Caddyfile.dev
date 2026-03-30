@@ -9,22 +9,22 @@
 http://dev.chrispicloud.dev {
   encode zstd gzip
 
-  # Redirect /financetracker -> /financetracker/ (explicit, no matcher ambiguity)
-  redir /financetracker /financetracker/ 308
+  # Redirect /choam -> /choam/ (explicit, no matcher ambiguity)
+  redir /choam /choam/ 308
 
   # API (strip prefix)
-  handle_path /financetracker/api/* {
+  handle_path /choam/api/* {
     reverse_proxy api:8080
   }
 
-  # Frontend (no strip — Vite expects /financetracker/ as base path)
-  handle /financetracker/* {
+  # Frontend (no strip — Vite expects /choam/ as base path)
+  handle /choam/* {
     reverse_proxy web:5173
   }
 
   # Default handler (useful for quick testing)
   handle {
-    respond "FinanceTracker DEV gateway OK" 200
+    respond "CHOAM DEV gateway OK" 200
   }
 }
 
@@ -33,16 +33,16 @@ http://dev.chrispicloud.dev {
 http://chrispicloud.dev {
   encode zstd gzip
 
-  # Redirect /financetracker -> /financetracker/ (explicit)
-  redir /financetracker /financetracker/ 308
+  # Redirect /choam -> /choam/ (explicit)
+  redir /choam /choam/ 308
 
   # API (strip prefix)
-  handle_path /financetracker/api/* {
+  handle_path /choam/api/* {
     reverse_proxy api:8080
   }
 
   # Static SPA served from /srv/web (Caddy file server)
-  handle_path /financetracker/* {
+  handle_path /choam/* {
     root * /srv/web
     file_server
     try_files {path} /index.html
@@ -50,6 +50,6 @@ http://chrispicloud.dev {
 
   # Default handler for root path
   handle {
-    respond "FinanceTracker PROD gateway OK" 200
+    respond "CHOAM PROD gateway OK" 200
   }
 }

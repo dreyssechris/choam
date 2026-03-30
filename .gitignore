@@ -425,16 +425,16 @@ FodyWeavers.xsd
 *.msp
 
 # .NET
-FinanceTracker.Api/bin/
-FinanceTracker.Api/obj/
+Choam.Api/bin/
+Choam.Api/obj/
 *.user
 *.suo
 
 # Node/Vite (Frontend)
-financetracker-web/node_modules/
-financetracker-web/dist/
-financetracker-web/.vite/
-financetracker-web/coverage/
+choam-web/node_modules/
+choam-web/dist/
+choam-web/.vite/
+choam-web/coverage/
 
 # Env
 .env
@@ -443,5 +443,5 @@ financetracker-web/coverage/
 !.env.*.example
 
 # ASP.NET local configs (nicht ins Repo)
-FinanceTracker.Api/appsettings.Development.json
-FinanceTracker.Api/appsettings.*.Local.json
+Choam.Api/appsettings.Development.json
+Choam.Api/appsettings.*.Local.json

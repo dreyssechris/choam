@@ -19,7 +19,7 @@ services:
     build:
         target: dev
     volumes:
-      - ../../src/financetracker-web:/app:cached
+      - ../../src/choam-web:/app:cached
       - /app/node_modules
     environment:
       VITE_API_BASE_URL: /api
@@ -28,12 +28,12 @@ services:
     build:
       context: ../..
       dockerfile: .devcontainer/Dockerfile.devtools
-    container_name: financetracker-devtools
+    container_name: choam-devtools
     volumes:
-      - ../..:/workspaces/FinanceTracker:cached
+      - ../..:/workspaces/Choam:cached
       - nuget-cache:/root/.nuget/packages
       - nuget-http-cache:/root/.local/share/NuGet/v3-cache
-    working_dir: /workspaces/FinanceTracker
+    working_dir: /workspaces/Choam
     command: sleep infinity
 
 volumes:

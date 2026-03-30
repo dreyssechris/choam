@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/FinanceTracker.Application/FinanceTracker.Application.csproj" />
-    <Project Path="src/FinanceTracker.Domain/FinanceTracker.Domain.csproj" />
-    <Project Path="src/FinanceTracker.Infrastructure/FinanceTracker.Infrastructure.csproj" />
-    <Project Path="src/FinanceTracker.Presentation/FinanceTracker.Presentation.csproj" />
-  </Folder>
-</Solution>

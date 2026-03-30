@@ -6,8 +6,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  API_IMAGE: ghcr.io/dreyssechris/finance-tracker-api
-  WEB_IMAGE: ghcr.io/dreyssechris/finance-tracker-web
+  API_IMAGE: ghcr.io/dreyssechris/choam-api
+  WEB_IMAGE: ghcr.io/dreyssechris/choam-web
 
 jobs:
   build-and-push:
@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: src/
-          file: src/FinanceTracker.Presentation/Dockerfile
+          file: src/Choam.Presentation/Dockerfile
           target: prod
           platforms: linux/arm64
           push: true
@@ -46,8 +46,8 @@ jobs:
       - name: Build & push Web image
         uses: docker/build-push-action@v6
         with:
-          context: src/financetracker-web
-          file: src/financetracker-web/Dockerfile
+          context: src/choam-web
+          file: src/choam-web/Dockerfile
           target: prod
           platforms: linux/arm64
           push: true
@@ -67,13 +67,13 @@ jobs:
       - name: Update dev image tags in homelab
         run: |
           sed -i "s|newTag: .*|newTag: sha-${{ github.sha }}|g" \
-            homelab/deploy/k8s/apps/finance-tracker/overlays/dev/kustomization.yaml
+            homelab/deploy/k8s/apps/choam/overlays/dev/kustomization.yaml
 
       - name: Commit and push to homelab
         run: |
           cd homelab
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add deploy/k8s/apps/finance-tracker/overlays/dev/kustomization.yaml
-          git diff --staged --quiet || git commit -m "chore(deploy): update finance-tracker dev to sha-${{ github.sha }}"
+          git add deploy/k8s/apps/choam/overlays/dev/kustomization.yaml
+          git diff --staged --quiet || git commit -m "chore(deploy): update choam dev to sha-${{ github.sha }}"
           git push
