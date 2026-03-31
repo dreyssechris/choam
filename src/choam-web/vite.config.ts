@@ -115,7 +115,7 @@ export default defineConfig({
       '/choam/api': {
         target: 'http://api:8080',
         changeOrigin: true,
-        rewrite: (p: string) => p.replace(/^\/choam\/api/, ''),
+        rewrite: (p: string) => p.replace(/^\/choam\/api/, '/api'),
       },
     },
   },

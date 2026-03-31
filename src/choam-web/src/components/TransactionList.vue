@@ -15,7 +15,7 @@ const emit = defineEmits<{
   delete: [id: number]
 }>()
 
-const { selectById } = useCategories()
+const { list: categoryList, selectById } = useCategories()
 
 // Responsive: switch to grid (card) mode on small screens
 const isGridMode = ref(window.innerWidth < 600)
@@ -65,7 +65,7 @@ const columns = [
   {
     name: 'category',
     label: 'Category',
-    field: (row: Transaction) => selectById(row.categoryId)?.name ?? row.categoryId,
+    field: 'categoryId',
     align: 'left' as const,
   },
   {
@@ -88,7 +88,8 @@ function typeIcon(type: string) {
 }
 
 function getCategoryName(categoryId: number): string {
-  return selectById(categoryId)?.name ?? String(categoryId)
+  const cat = categoryList.data.value?.find((c) => c.id === categoryId)
+  return cat?.name ?? String(categoryId)
 }
 </script>
 
@@ -117,6 +118,12 @@ function getCategoryName(categoryId: number): string {
           :class="typeIcon(slotProps.row.type).colorClass"
           size="sm"
         />
+      </q-td>
+    </template>
+
+    <template #body-cell-category="slotProps">
+      <q-td :props="slotProps">
+        {{ getCategoryName(slotProps.row.categoryId) }}
       </q-td>
     </template>
 
