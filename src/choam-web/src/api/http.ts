@@ -1,7 +1,7 @@
 // Build a robust base URL for API calls.
-// - Dev (Docker Compose): Vite proxy rewrites /api -> api:8080
-// - Prod (K8s): /choam/api -> Traefik -> api:8080
-const BASE = import.meta.env.VITE_API_BASE_URL ?? "/choam/api";
+// - Dev (Docker Compose): Vite proxy forwards /api -> api:8080
+// - Prod (K8s): /api -> Traefik -> api:8080
+const BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
 // Safe join to avoid double slashes
 function join(base: string, path: string) {

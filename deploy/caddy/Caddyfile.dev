@@ -6,50 +6,34 @@
 # ===== Development (Vite Dev Server) =====
 # Used when running the development environment via Docker Compose.
 # Cloudflare Tunnel connects to this Caddy instance over plain HTTP (port 80).
-http://dev.chrispicloud.dev {
+http://choam-dev.chrispicloud.dev {
   encode zstd gzip
 
-  # Redirect /choam -> /choam/ (explicit, no matcher ambiguity)
-  redir /choam /choam/ 308
-
-  # API (strip prefix)
-  handle_path /choam/api/* {
+  # API requests
+  handle /api/* {
     reverse_proxy api:8080
   }
 
-  # Frontend (no strip — Vite expects /choam/ as base path)
-  handle /choam/* {
-    reverse_proxy web:5173
-  }
-
-  # Default handler (useful for quick testing)
+  # Frontend (Vite dev server)
   handle {
-    respond "CHOAM DEV gateway OK" 200
+    reverse_proxy web:5173
   }
 }
 
 # ===== Production (Static Build) =====
 # Optional in your dev container. Kept here with HTTP only (no real certs).
-http://chrispicloud.dev {
+http://choam.chrispicloud.dev {
   encode zstd gzip
 
-  # Redirect /choam -> /choam/ (explicit)
-  redir /choam /choam/ 308
-
-  # API (strip prefix)
-  handle_path /choam/api/* {
+  # API requests
+  handle /api/* {
     reverse_proxy api:8080
   }
 
-  # Static SPA served from /srv/web (Caddy file server)
-  handle_path /choam/* {
+  # Static SPA served from /srv/web
+  handle {
     root * /srv/web
     file_server
     try_files {path} /index.html
-  }
-
-  # Default handler for root path
-  handle {
-    respond "CHOAM PROD gateway OK" 200
   }
 }

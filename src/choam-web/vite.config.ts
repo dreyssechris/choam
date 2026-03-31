@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 const isRemoteDev = process.env.VITE_HMR_HOST != null
 
 export default defineConfig({
-  base: '/choam/',
+  base: '/',
 
   plugins: [
     vue({
@@ -20,7 +20,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'prompt',
-      scope: '/choam/',
+      scope: '/',
       manifest: {
         name: 'CHOAM',
         short_name: 'CHOAM',
@@ -28,8 +28,8 @@ export default defineConfig({
         theme_color: '#0b0c10',
         background_color: '#0b0c10',
         display: 'standalone',
-        scope: '/choam/',
-        start_url: '/choam/',
+        scope: '/',
+        start_url: '/',
         icons: [
           {
             src: 'icons/pwa-192x192.png',
@@ -50,11 +50,11 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: '/choam/index.html',
-        navigateFallbackAllowlist: [/^\/choam\//],
+        navigateFallback: '/index.html',
+        navigateFallbackAllowlist: [/^\//],
         runtimeCaching: [
           {
-            urlPattern: /\/choam\/api\/.*/,
+            urlPattern: /\/api\/.*/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
@@ -100,7 +100,8 @@ export default defineConfig({
       'choam-web',
       'choam-web-dev',
       'chrispicloud.dev',
-      'dev.chrispicloud.dev',
+      'choam-dev.chrispicloud.dev',
+      'choam.chrispicloud.dev',
     ],
     hmr: isRemoteDev
       ? {
@@ -108,14 +109,12 @@ export default defineConfig({
           host: process.env.VITE_HMR_HOST,
           port: 5173,
           clientPort: 443,
-          path: '/choam',
         }
       : true,
     proxy: {
-      '/choam/api': {
+      '/api': {
         target: 'http://api:8080',
         changeOrigin: true,
-        rewrite: (p: string) => p.replace(/^\/choam\/api/, '/api'),
       },
     },
   },

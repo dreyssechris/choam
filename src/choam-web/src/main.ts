@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { Quasar, Dark, Notify } from 'quasar'
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 
+import '@quasar/extras/material-symbols-outlined/material-symbols-outlined.css'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 

@@ -1,11 +1,19 @@
 .transaction-details {
   .q-item__section--side {
     min-width: 120px;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.85rem;
+    color: var(--on-surface-variant);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+
+  .q-item__section:not(.q-item__section--side) {
+    color: var(--on-surface);
+    font-weight: 500;
   }
 
   .q-separator {
-    background: var(--bordercolor);
+    background: var(--outline-variant);
   }
 }

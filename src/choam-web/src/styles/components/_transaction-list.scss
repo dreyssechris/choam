@@ -1,24 +1,174 @@
-.transaction-table {
-  background: transparent;
+$table-cell-padding: 24px 24px;
+$table-cell-padding-y: 20px;
+$row-border-color: var(--surface-container-high);
+$header-bg: var(--surface-container-low);
+$category-badge-bg: var(--surface-container-high);
 
-  // Fixed layout: column widths are strictly enforced
-  .q-table {
-    table-layout: fixed;
+.ledger-section {
+  background: var(--surface);
+  border: 1px solid var(--surface-container-high);
+  overflow: hidden;
+}
+
+.ledger-section__header {
+  background: var(--surface);
+  padding: 24px;
+  border-bottom: 1px solid var(--surface-container-high);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ledger-section__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+// Table
+.ledger-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+
+  thead {
+    background: $header-bg;
   }
 
-  &__actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
+  th,
+  td {
+    padding: $table-cell-padding;
+    text-align: center;
+  }
+
+  th {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--on-surface-variant);
+    font-weight: 600;
+  }
+
+  tbody tr {
+    border-top: 1px solid var(--surface-container-high);
+    transition: background 0.15s;
+
+    &:hover {
+      background: var(--surface-container-low);
+    }
   }
 }
 
-// Mobile card layout
-.transaction-card {
-  background: var(--card-bg);
+.ledger-table__icon-cell {
+  width: 48px;
+}
 
-  .text-caption {
+.ledger-table__icon {
+
+  &--income { color: var(--moss-green); }
+  &--expense { color: var(--muted-red); }
+  &--investment { color: var(--prof-teal); }
+}
+
+.ledger-table__date {
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+}
+
+.ledger-table__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+}
+
+.ledger-table__type {
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+.ledger-table__amount {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+}
+
+.ledger-table__category {}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: $category-badge-bg;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 9px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--on-surface);
+}
+
+.ledger-table__actions {}
+
+.actions-btn {
+  background: none;
+  border: none;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--sand-gold);
+  }
+}
+
+// Empty state
+.ledger-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+}
+
+// Mobile card layout
+.ledger-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.ledger-card {
+  background: var(--surface-container-low);
+  border: 1px solid var(--surface-container-high);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+  }
+
+  &__meta {
     font-size: 0.75rem;
+    color: var(--on-surface-variant);
+    margin-top: 2px;
+  }
+
+  &__amount {
+    font-weight: 700;
+    color: white;
+    white-space: nowrap;
   }
 }

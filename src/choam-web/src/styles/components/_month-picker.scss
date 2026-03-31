@@ -1,4 +1,82 @@
+$picker-padding-x: 32px;
+$picker-padding-y: 12px;
+
 .month-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--surface-container-low);
+    padding: $picker-padding-y $picker-padding-x;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  &__arrow {
+    color: var(--on-surface-variant);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--sand-gold);
+    }
+  }
+
+  &__display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__chevron {
+    color: var(--sand-gold);
+    font-size: 18px;
+    transition: transform 0.3s;
+  }
+
+  &__underline {
+    height: 2px;
+    width: 32px;
+    margin-top: 4px;
+    opacity: 0.5;
+    background: var(--sand-gold);
+    transition: width 0.3s;
+  }
+
+  &__display:hover &__underline {
+    width: 100%;
+  }
+
+  &__display:hover &__chevron {
+    transform: rotate(180deg);
+  }
+
+  // Hidden select for dropdown functionality
   &__select {
     min-width: 180px;
   }

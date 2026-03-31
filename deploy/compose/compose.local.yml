@@ -22,7 +22,7 @@ services:
       - ../../src/choam-web:/app:cached
       - /app/node_modules
     environment:
-      VITE_API_BASE_URL: /choam/api
+      VITE_API_BASE_URL: /api
 
   devtools:
     build:

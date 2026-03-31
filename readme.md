@@ -51,8 +51,8 @@ Deployed on Raspberry Pi 4 via K3s with Flux CD for GitOps.
 1. Create feature branch, develop locally
 2. Open PR to `main` → CI runs (lint, type-check, build)
 3. Merge to `main` → CD builds ARM64 images, pushes to ghcr.io, updates dev manifests
-4. Flux CD auto-deploys to `dev.chrispicloud.dev/choam`
-5. Create git tag (`v1.x.x`) → CD deploys to `chrispicloud.dev/choam`
+4. Flux CD auto-deploys to `choam-dev.chrispicloud.dev`
+5. Create git tag (`v1.x.x`) → CD deploys to `choam.chrispicloud.dev`
 
 K8s manifests and infrastructure docs are in the [homelab](https://github.com/dreyssechris/homelab) repo.
 

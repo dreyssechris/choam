@@ -17,73 +17,21 @@ const emit = defineEmits<{
 
 const { list: categoryList } = useCategories()
 
-// Responsive: switch to grid (card) mode on small screens
-const isGridMode = ref(window.innerWidth < 600)
+const isMobile = ref(window.innerWidth < 600)
 
 function onResize() {
-  isGridMode.value = window.innerWidth < 600
+  isMobile.value = window.innerWidth < 600
 }
 
 onMounted(() => window.addEventListener('resize', onResize))
 onUnmounted(() => window.removeEventListener('resize', onResize))
 
-const columns = [
-  {
-    name: 'type-icon',
-    label: '',
-    field: 'type',
-    align: 'center' as const,
-    style: 'width: 48px',
-    headerStyle: 'width: 48px',
-  },
-  {
-    name: 'date',
-    label: 'Date',
-    field: (row: Transaction) => format(parseISO(row.date), 'yyyy-MM-dd'),
-    align: 'left' as const,
-    sortable: true,
-  },
-  {
-    name: 'title',
-    label: 'Title',
-    field: 'title',
-    align: 'left' as const,
-  },
-  {
-    name: 'type',
-    label: 'Type',
-    field: 'type',
-    align: 'left' as const,
-  },
-  {
-    name: 'amount',
-    label: 'Amount',
-    field: 'amount',
-    align: 'left' as const,
-    format: (val: number) => `${val.toFixed(2)} EUR`,
-  },
-  {
-    name: 'category',
-    label: 'Category',
-    field: 'categoryId',
-    align: 'left' as const,
-  },
-  {
-    name: 'actions',
-    label: '',
-    field: 'id',
-    align: 'right' as const,
-    style: 'width: 140px',
-    headerStyle: 'width: 140px',
-  },
-]
-
 function typeIcon(type: string) {
   switch (type) {
-    case 'Income': return { icon: 'trending_up', colorClass: 'text-income' }
-    case 'Expense': return { icon: 'trending_down', colorClass: 'text-expense' }
-    case 'Investment': return { icon: 'savings', colorClass: 'text-investment' }
-    default: return { icon: 'help', colorClass: 'text-grey' }
+    case 'Income': return { icon: 'trending_up', modifier: 'income' }
+    case 'Expense': return { icon: 'trending_down', modifier: 'expense' }
+    case 'Investment': return { icon: 'bar_chart', modifier: 'investment' }
+    default: return { icon: 'help', modifier: '' }
   }
 }
 
@@ -91,81 +39,204 @@ function getCategoryName(categoryId: number): string {
   const cat = categoryList.data.value?.find((c) => c.id === categoryId)
   return cat?.name ?? String(categoryId)
 }
+
+function formatAmount(row: Transaction): string {
+  const prefix = row.type === 'Income' ? '+' : '-'
+  return `${prefix}${Math.abs(row.amount).toLocaleString('de-DE', { minimumFractionDigits: 2 })} €`
+}
+
+function formatDate(iso: string): string {
+  return format(parseISO(iso), 'dd MMM yyyy')
+}
 </script>
 
 <template>
-  <div v-if="items.length === 0" class="text-center q-pa-lg text-grey">
-    No transactions yet.
-  </div>
-  <q-table
-    v-else
-    :rows="items"
-    :columns="columns"
-    row-key="id"
-    flat
-    bordered
-    dark
-    hide-pagination
-    :rows-per-page-options="[0]"
-    :grid="isGridMode"
-    class="transaction-table"
-  >
-    <!-- Desktop: custom cells -->
-    <template #body-cell-type-icon="slotProps">
-      <q-td :props="slotProps">
+  <section class="ledger-section">
+    <div
+      v-if="items.length === 0"
+      class="ledger-empty"
+    >
+      No transactions yet.
+    </div>
+
+    <!-- Desktop table -->
+    <div
+      v-else-if="!isMobile"
+      style="overflow-x: auto"
+    >
+      <table class="ledger-table">
+        <thead>
+          <tr>
+            <th class="ledger-table__icon-cell font-label" />
+            <th class="font-label">
+              Date
+            </th>
+            <th class="font-label">
+              Title
+            </th>
+            <th class="font-label">
+              Type
+            </th>
+            <th class="font-label">
+              Amount
+            </th>
+            <th class="font-label">
+              Category
+            </th>
+            <th class="font-label">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="row in items"
+            :key="row.id"
+          >
+            <td class="ledger-table__icon-cell">
+              <q-icon
+                :name="typeIcon(row.type).icon"
+                class="ledger-table__icon"
+                :class="`ledger-table__icon--${typeIcon(row.type).modifier}`"
+                size="23px"
+              />
+            </td>
+            <td class="ledger-table__date">
+              {{ formatDate(row.date) }}
+            </td>
+            <td class="ledger-table__title">
+              {{ row.title }}
+            </td>
+            <td class="ledger-table__type">
+              {{ row.type }}
+            </td>
+            <td class="ledger-table__amount font-headline">
+              {{ formatAmount(row) }}
+            </td>
+            <td class="ledger-table__category">
+              <span class="category-badge">
+                {{ getCategoryName(row.categoryId) }}
+              </span>
+            </td>
+            <td class="ledger-table__actions">
+              <button class="actions-btn">
+                <q-icon
+                  name="sym_o_more_vert"
+                  size="20px"
+                />
+                <q-menu>
+                  <q-list dense>
+                    <q-item
+                      clickable
+                      @click="emit('view', row)"
+                    >
+                      <q-item-section avatar>
+                        <q-icon name="sym_o_visibility" />
+                      </q-item-section>
+                      <q-item-section>View</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      @click="emit('edit', row)"
+                    >
+                      <q-item-section avatar>
+                        <q-icon name="sym_o_edit" />
+                      </q-item-section>
+                      <q-item-section>Edit</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      @click="emit('delete', row.id)"
+                    >
+                      <q-item-section avatar>
+                        <q-icon
+                          name="sym_o_delete"
+                          color="negative"
+                        />
+                      </q-item-section>
+                      <q-item-section class="text-negative">
+                        Delete
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile card layout -->
+    <div
+      v-else
+      class="ledger-cards"
+    >
+      <div
+        v-for="row in items"
+        :key="row.id"
+        class="ledger-card"
+      >
         <q-icon
-          :name="typeIcon(slotProps.row.type).icon"
-          :class="typeIcon(slotProps.row.type).colorClass"
-          size="sm"
+          :name="typeIcon(row.type).icon"
+          class="ledger-table__icon"
+          :class="`ledger-table__icon--${typeIcon(row.type).modifier}`"
+          size="20px"
         />
-      </q-td>
-    </template>
-
-    <template #body-cell-category="slotProps">
-      <q-td :props="slotProps">
-        {{ getCategoryName(slotProps.row.categoryId) }}
-      </q-td>
-    </template>
-
-    <template #body-cell-actions="slotProps">
-      <q-td :props="slotProps">
-        <div class="transaction-table__actions">
-          <q-btn flat round dense icon="visibility" @click="emit('view', slotProps.row)" />
-          <q-btn flat round dense icon="edit" @click="emit('edit', slotProps.row)" />
-          <q-btn flat round dense icon="delete" color="negative" @click="emit('delete', slotProps.row.id)" />
+        <div class="ledger-card__body">
+          <div class="ledger-card__title">
+            {{ row.title }}
+          </div>
+          <div class="ledger-card__meta">
+            {{ formatDate(row.date) }} · {{ row.type }} · {{ getCategoryName(row.categoryId) }}
+          </div>
         </div>
-      </q-td>
-    </template>
-
-    <!-- Mobile: card layout per row -->
-    <template #item="slotProps">
-      <div class="q-pa-xs col-12">
-        <q-card flat bordered dark class="transaction-card">
-          <q-card-section class="row items-center no-wrap q-pa-sm">
-            <q-icon
-              :name="typeIcon(slotProps.row.type).icon"
-              :class="[typeIcon(slotProps.row.type).colorClass, 'q-mr-sm']"
-              size="sm"
-            />
-            <div class="col">
-              <div class="text-weight-medium">{{ slotProps.row.title }}</div>
-              <div class="text-caption text-grey">
-                {{ format(parseISO(slotProps.row.date), 'yyyy-MM-dd') }}
-                · {{ slotProps.row.type }}
-                · {{ getCategoryName(slotProps.row.categoryId) }}
-              </div>
-            </div>
-            <div class="text-weight-bold q-mr-sm">
-              {{ slotProps.row.amount.toFixed(2) }} €
-            </div>
-            <div class="transaction-table__actions">
-              <q-btn flat round dense icon="visibility" @click="emit('view', slotProps.row)" />
-              <q-btn flat round dense icon="edit" @click="emit('edit', slotProps.row)" />
-              <q-btn flat round dense icon="delete" color="negative" @click="emit('delete', slotProps.row.id)" />
-            </div>
-          </q-card-section>
-        </q-card>
+        <span class="ledger-card__amount font-headline">
+          {{ formatAmount(row) }}
+        </span>
+        <button class="actions-btn">
+          <q-icon
+            name="sym_o_more_vert"
+            size="20px"
+          />
+          <q-menu>
+            <q-list dense>
+              <q-item
+                clickable
+                @click="emit('view', row)"
+              >
+                <q-item-section avatar>
+                  <q-icon name="sym_o_visibility" />
+                </q-item-section>
+                <q-item-section>View</q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                @click="emit('edit', row)"
+              >
+                <q-item-section avatar>
+                  <q-icon name="sym_o_edit" />
+                </q-item-section>
+                <q-item-section>Edit</q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                @click="emit('delete', row.id)"
+              >
+                <q-item-section avatar>
+                  <q-icon
+                    name="sym_o_delete"
+                    color="negative"
+                  />
+                </q-item-section>
+                <q-item-section class="text-negative">
+                  Delete
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </button>
       </div>
-    </template>
-  </q-table>
+    </div>
+  </section>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import CategorySelect from './CategorySelect.vue'
 import CategoryCreate from './CategoryCreate.vue'
 import type { TransactionCreate, TransactionType } from '../contracts/transactions'
@@ -25,9 +25,30 @@ const emit = defineEmits<{
 }>()
 
 const title = ref(props.defaultValues?.title ?? '')
-const amount = ref(
-  props.defaultValues?.amount != null ? String(props.defaultValues.amount) : '',
+
+// Amount stored as cents — digits shift from right like banking apps
+const amountCents = ref(
+  props.defaultValues?.amount != null
+    ? Math.round(props.defaultValues.amount * 100)
+    : 0,
 )
+
+const amountDisplay = computed(() => {
+  const euros = Math.floor(amountCents.value / 100)
+  const cents = amountCents.value % 100
+  return `${euros.toLocaleString('de-DE')},${String(cents).padStart(2, '0')} €`
+})
+
+function onAmountKeydown(e: KeyboardEvent) {
+  if (e.key >= '0' && e.key <= '9') {
+    e.preventDefault()
+    amountCents.value = amountCents.value * 10 + Number(e.key)
+  } else if (e.key === 'Backspace') {
+    e.preventDefault()
+    amountCents.value = Math.floor(amountCents.value / 10)
+  }
+}
+
 const type = ref<TransactionType>(props.defaultValues?.type ?? 'Income')
 const date = ref(
   props.defaultValues?.date ?? new Date().toISOString().slice(0, 10),
@@ -46,7 +67,7 @@ watch(
   (dv) => {
     if (!dv) return
     if (dv.title !== undefined) title.value = dv.title
-    if (dv.amount !== undefined) amount.value = String(dv.amount)
+    if (dv.amount !== undefined) amountCents.value = Math.round(dv.amount * 100)
     if (dv.type !== undefined) type.value = dv.type
     if (dv.date !== undefined) date.value = dv.date
     if (dv.categoryId !== undefined) categoryId.value = dv.categoryId
@@ -54,10 +75,14 @@ watch(
   },
 )
 
+const amountRules = [
+  () => amountCents.value > 0 || 'Fill in an amount',
+]
+
 function handleSubmit() {
   const payload: TransactionCreate = {
     title: title.value,
-    amount: Number(amount.value),
+    amount: amountCents.value / 100,
     description: description.value.trim() || undefined,
     date: new Date(date.value).toISOString(),
     type: type.value,
@@ -70,7 +95,10 @@ const showCancel = !!props.defaultValues
 </script>
 
 <template>
-  <q-form class="transaction-form" @submit.prevent="handleSubmit">
+  <q-form
+    class="transaction-form"
+    @submit.prevent="handleSubmit"
+  >
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
         <q-input
@@ -86,18 +114,16 @@ const showCancel = !!props.defaultValues
       </div>
       <div class="col-12 col-md-6">
         <q-input
-          v-model="amount"
+          :model-value="amountDisplay"
           label="Amount"
           outlined
           dense
           dark
-          prefix="EUR "
-          type="number"
-          step="0.01"
-          min="0"
           :disable="submitting"
-          :rules="[(v: string) => !!v || 'Fill in an amount']"
+          :rules="amountRules"
           lazy-rules
+          @keydown="onAmountKeydown"
+          @beforeinput.prevent
         />
       </div>
       <div class="col-12 col-md-6">

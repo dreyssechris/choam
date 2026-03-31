@@ -1,25 +1,88 @@
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("/fonts/JetBrainsMono-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
 
-body {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas,
-    "Liberation Mono", Menlo, monospace;
-}
-
-// Domain-specific semantic colors (not covered by Quasar brand)
+// Domain-specific semantic colors
 :root {
-  --income: #85bb65;
-  --expense: #b96565;
-  --investment: #6380bf;
-  --bordercolor: #303134;
-  --card-bg: #161a20;
+  --income: #839067;
+  --expense: #E07A5F;
+  --investment: #3D85C6;
+  --bordercolor: #141414;
+  --card-bg: #000000;
+
+  // CHOAM design tokens
+  --sand-gold: #F4CF8B;
+  --muted-red: #E07A5F;
+  --spice-red: #7b3224;
+  --moss-green: #839067;
+  --prof-teal: #3D85C6;
+  --surface: #000000;
+  --surface-container: #080808;
+  --surface-container-low: #050505;
+  --surface-container-high: #141414;
+  --on-surface: #e2e2e2;
+  --on-surface-variant: #777777;
+  --outline: #333333;
+  --outline-variant: #1a1a1a;
 }
 
+// Typography
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #000000;
+  color: var(--on-surface);
+}
+
+.font-headline {
+  font-family: 'Noto Serif', serif;
+}
+
+.font-label {
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+}
+
+// Semantic color classes
 .text-income     { color: var(--income); }
 .text-expense    { color: var(--expense); }
 .text-investment { color: var(--investment); }
+
+// Film grain overlay
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+// Override Quasar defaults for sharp corners
+.q-btn,
+.q-card,
+.q-dialog__inner > div,
+.q-field__control,
+.q-table,
+.q-menu {
+  border-radius: 0 !important;
+}
+
+// Override Quasar dark backgrounds
+.q-dark {
+  background: #000000;
+}
+
+.q-header {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border-bottom: 1px solid var(--surface-container-high);
+}
+
+// Selection color
+::selection {
+  background: var(--sand-gold);
+  color: #000000;
+}

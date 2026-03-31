@@ -1,7 +1,36 @@
 .transaction-form {
   .transaction-form__category-row {
-    border-top: 1px solid var(--bordercolor);
+    border-top: 1px solid var(--outline-variant);
     padding-top: 12px;
     margin-top: 4px;
+  }
+
+  // Quasar input overrides for Dune theme
+  .q-field__control {
+    background: var(--surface-container-high) !important;
+  }
+
+  .q-field--outlined .q-field__control::before {
+    border-color: var(--outline-variant) !important;
+  }
+
+  .q-field--outlined .q-field__control:hover::before {
+    border-color: var(--outline) !important;
+  }
+
+  .q-field--focused .q-field__control::after {
+    border-color: var(--sand-gold) !important;
+    border-width: 2px !important;
+  }
+
+  .q-field__label {
+    color: var(--on-surface-variant) !important;
+  }
+
+  // Submit / cancel button row
+  .q-btn[type="submit"] {
+    background: var(--sand-gold) !important;
+    color: black !important;
+    font-weight: 700;
   }
 }

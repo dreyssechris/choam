@@ -1,8 +1,8 @@
 services:
   web:
     environment:
-      VITE_API_BASE_URL: /choam/api
-      VITE_HMR_HOST: dev.chrispicloud.dev
+      VITE_API_BASE_URL: /api
+      VITE_HMR_HOST: choam-dev.chrispicloud.dev
 
   caddy:
     build:

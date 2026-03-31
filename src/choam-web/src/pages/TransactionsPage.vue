@@ -1,79 +1,106 @@
 <template>
   <q-page padding>
     <div class="q-mx-auto transactions-page">
-      <div v-if="list.isLoading.value" class="text-center q-pa-xl">
+      <div v-if="list.isLoading.value" class="page-status">
         <q-spinner-dots size="40px" color="primary" />
-        <p class="q-mt-md">Loading...</p>
+        <p class="page-status__text">Loading...</p>
       </div>
 
-      <div v-else-if="list.isError.value" class="text-center q-pa-xl text-negative">
+      <div v-else-if="list.isError.value" class="page-status text-negative">
         <q-icon name="error" size="48px" />
-        <p class="q-mt-md">Failed to load Ledger</p>
+        <p class="page-status__text">Failed to load Ledger</p>
       </div>
 
       <template v-else>
-        <h1 class="text-h4 q-mb-md text-center">
-          Ledger
-        </h1>
-
-        <MonthPicker
-          :year="year"
-          :month="month"
-          @previous="previousMonth"
-          @next="nextMonth"
-          @update:month="(m: number) => (month = m)"
-        />
-
-        <div class="q-my-md text-center">
-          <q-btn
-            round
-            icon="add"
-            color="primary"
-            aria-label="Add new transaction"
-            @click="modal = { kind: 'create' }"
+        <!-- Header -->
+        <header class="ledger-header">
+          <div>
+            <p class="ledger-header__subtitle font-label">
+              Ankert/Dreyße Financials
+            </p>
+            <h1 class="ledger-header__title font-headline">
+              Ledger
+            </h1>
+          </div>
+          <MonthPicker
+            :year="year"
+            :month="month"
+            @previous="previousMonth"
+            @next="nextMonth"
+            @update:month="(m: number) => (month = m)"
           />
+          <div class="ledger-header__actions">
+            <button class="btn-ghost">
+              <q-icon name="sym_o_file_download" size="18px" />
+              Export Statement
+            </button>
+            <button
+              class="btn-primary"
+              @click="modal = { kind: 'create' }"
+            >
+              <q-icon name="sym_o_add" size="20px" />
+              New Entry
+            </button>
+          </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label font-label">
+                Total Income
+                <q-icon name="trending_up" class="kpi-card__icon kpi-card__icon--income" />
+              </span>
+            </div>
+            <div class="kpi-card__body">
+              <span class="kpi-card__value font-headline">{{ eur.format(totals.income) }}</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label font-label">
+                Total Expenses
+                <q-icon name="trending_down" class="kpi-card__icon kpi-card__icon--expense" />
+              </span>
+            </div>
+            <div class="kpi-card__body">
+              <span class="kpi-card__value font-headline">{{ eur.format(totals.expense) }}</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label font-label">
+                Total Investments
+                <q-icon name="sym_o_bar_chart" class="kpi-card__icon kpi-card__icon--investment" />
+              </span>
+            </div>
+            <div class="kpi-card__body">
+              <span class="kpi-card__value font-headline">{{ eur.format(totals.investment) }}</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label font-label">
+                Netto-Balance
+                <q-icon name="sym_o_account_balance" class="kpi-card__icon kpi-card__icon--balance" />
+              </span>
+            </div>
+            <div class="kpi-card__body">
+              <span
+                class="kpi-card__value font-headline"
+                :class="totals.netCashFlow >= 0 ? 'kpi-card__value--positive' : 'kpi-card__value--negative'"
+              >
+                {{ eur.format(totals.netCashFlow) }}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="row q-col-gutter-sm q-mb-lg">
-          <div class="col-6 col-md-3">
-            <q-card flat bordered dark class="summary-card">
-              <q-card-section class="column items-center justify-center q-pa-md">
-                <q-icon name="trending_up" class="text-income q-mb-xs" size="28px" />
-                <span class="summary-card__value text-income">{{ eur.format(totals.income) }}</span>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div class="col-6 col-md-3">
-            <q-card flat bordered dark class="summary-card">
-              <q-card-section class="column items-center justify-center q-pa-md">
-                <q-icon name="trending_down" class="text-expense q-mb-xs" size="28px" />
-                <span class="summary-card__value text-expense">{{ eur.format(totals.expense) }}</span>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div class="col-6 col-md-3">
-            <q-card flat bordered dark class="summary-card">
-              <q-card-section class="column items-center justify-center q-pa-md">
-                <q-icon name="savings" class="text-investment q-mb-xs" size="28px" />
-                <span class="summary-card__value text-investment">{{ eur.format(totals.investment) }}</span>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div class="col-6 col-md-3">
-            <q-card flat bordered dark class="summary-card">
-              <q-card-section class="column items-center justify-center q-pa-md">
-                <q-icon name="swap_vert" size="28px" class="q-mb-xs" />
-                <span
-                  class="summary-card__value"
-                  :class="totals.netCashFlow >= 0 ? 'text-income' : 'text-expense'"
-                >
-                  {{ eur.format(totals.netCashFlow) }}
-                </span>
-              </q-card-section>
-            </q-card>
-          </div>
-        </div>
-
+        <!-- Transaction List -->
         <TransactionList
           :items="monthTransactions"
           @view="(t: Transaction) => (modal = { kind: 'view', tx: t })"
@@ -81,10 +108,11 @@
           @delete="(id: number) => remove.mutate(id)"
         />
 
+        <!-- Dialog -->
         <q-dialog v-model="dialogOpen">
           <q-card dark class="dialog-card">
             <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">{{ modalTitle }}</div>
+              <div class="text-h6 font-headline">{{ modalTitle }}</div>
               <q-space />
               <q-btn flat round dense icon="close" @click="modal = { kind: 'closed' }" />
             </q-card-section>
@@ -178,7 +206,7 @@ const monthTransactions = computed(() =>
 
 const totals = computed(() => totalsByType(monthTransactions.value))
 
-const eur = new Intl.NumberFormat('en-EN', {
+const eur = new Intl.NumberFormat('de-DE', {
   style: 'currency',
   currency: 'EUR',
 })
