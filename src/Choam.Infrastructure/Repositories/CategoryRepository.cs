@@ -7,18 +7,20 @@ namespace Choam.Infrastructure.Repositories;
 
 public sealed class CategoryRepository(AppDbContext context) : ICategoryRepository
 {
-    public async Task<List<Category>> GetAllAsync(CancellationToken ct)
+    public async Task<List<Category>> GetAllAsync(string userId, CancellationToken ct)
         => await context.Categories
             .AsNoTracking()
+            .Where(c => c.UserId == userId)
             .OrderBy(c => c.Name)
             .ToListAsync(ct);
 
-    public async Task<Category?> GetByIdAsync(int id, CancellationToken ct)
-        => await context.Categories.FindAsync([id], ct);
-
-    public async Task<Category?> GetByNameAsync(string name, CancellationToken ct)
+    public async Task<Category?> GetByIdAsync(int id, string userId, CancellationToken ct)
         => await context.Categories
-            .FirstOrDefaultAsync(c => c.Name == name, ct);
+            .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId, ct);
+
+    public async Task<Category?> GetByNameAsync(string name, string userId, CancellationToken ct)
+        => await context.Categories
+            .FirstOrDefaultAsync(c => c.Name == name && c.UserId == userId, ct);
 
     public async Task AddAsync(Category category, CancellationToken ct)
         => await context.Categories.AddAsync(category, ct);

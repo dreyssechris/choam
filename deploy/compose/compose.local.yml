@@ -23,6 +23,7 @@ services:
       - /app/node_modules
     environment:
       VITE_API_BASE_URL: /api
+      VITE_API_PROXY_TARGET: http://api:8080
 
   devtools:
     build:

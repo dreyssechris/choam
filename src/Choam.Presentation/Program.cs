@@ -1,10 +1,14 @@
 using System.Text.Json.Serialization;
 using Choam.Application;
+using Choam.Application.Interfaces;
 using Choam.Infrastructure;
 using Choam.Infrastructure.Data;
 using Choam.Presentation.Middleware;
+using Choam.Presentation.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +16,30 @@ var builder = WebApplication.CreateBuilder(args);
 // --- Layer DI Registration ---
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// --- Authentication (Keycloak OIDC) ---
+var keycloakSection = builder.Configuration.GetSection("Keycloak");
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = keycloakSection["Authority"];
+        options.Audience = keycloakSection["Audience"];
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            RoleClaimType = "roles"
+        };
+    });
+
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // --- ASP.NET Core Services ---
 builder.Services
@@ -50,7 +78,9 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<UserProvisioningMiddleware>();
 app.MapControllers();
 app.MapHealthChecks("/health");
 

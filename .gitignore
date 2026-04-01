@@ -446,5 +446,4 @@ appstore-images/
 !.env.*.example
 
 # ASP.NET local configs (nicht ins Repo)
-Choam.Api/appsettings.Development.json
-Choam.Api/appsettings.*.Local.json
+**/appsettings.Development.json

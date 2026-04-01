@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useAuth } from '../auth/useAuth'
 import '../styles/layouts/_main-layout.scss'
 
 const router = useRouter()
 const route = useRoute()
+const { userName, logout } = useAuth()
 
 const avatars = ['/avatars/cloak.png', '/avatars/fremen-mask.png', '/avatars/tleilaxu.png']
 
@@ -54,8 +56,10 @@ const navItems = [
               :src="userAvatar"
               alt="Avatar"
               class="nav-user__avatar"
+              style="cursor: pointer"
+              @click="logout"
             />
-            <span class="nav-user__name">Administrator</span>
+            <span class="nav-user__name">{{ userName() }}</span>
           </div>
         </div>
       </div>

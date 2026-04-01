@@ -1,9 +1,7 @@
-// Build a robust base URL for API calls.
-// - Dev (Docker Compose): Vite proxy forwards /api -> api:8080
-// - Prod (K8s): /api -> Traefik -> api:8080
+import { useAuth } from "../auth/useAuth";
+
 const BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
-// Safe join to avoid double slashes
 function join(base: string, path: string) {
   const b = base.replace(/\/+$/, "");
   const p = path.replace(/^\/+/, "");
@@ -12,10 +10,17 @@ function join(base: string, path: string) {
 
 export async function api<T>(path: string, options?: RequestInit): Promise<T> {
   const url = join(BASE, path);
+  const { getAccessToken } = useAuth();
+  const token = getAccessToken();
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 
   const res = await fetch(url, {
-    headers: { "Content-Type": "application/json" },
     ...options,
+    headers: { ...headers, ...(options?.headers as Record<string, string>) },
   });
 
   if (!res.ok) {

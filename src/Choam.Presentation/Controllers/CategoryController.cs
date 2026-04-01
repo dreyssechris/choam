@@ -1,9 +1,11 @@
 using Choam.Application.Dtos;
 using Choam.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Choam.Presentation.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/categories")]
 public class CategoryController(ICategoryService categoryService) : ControllerBase

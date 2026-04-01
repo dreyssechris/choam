@@ -1,9 +1,11 @@
 using Choam.Application.Dtos;
 using Choam.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Choam.Presentation.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/transactions")]
 public class TransactionController(ITransactionService transactionService) : ControllerBase

@@ -1,9 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainLayout from '../layouts/MainLayout.vue'
+import { useAuth } from '../auth/useAuth'
 
 const router = createRouter({
   history: createWebHistory('/'),
   routes: [
+    {
+      path: '/auth/callback',
+      name: 'auth-callback',
+      component: () => import('../pages/AuthCallbackPage.vue'),
+    },
     {
       path: '/',
       component: MainLayout,
@@ -35,6 +41,21 @@ const router = createRouter({
       redirect: '/',
     },
   ],
+})
+
+router.beforeEach((to) => {
+  if (to.name === 'auth-callback') return true
+
+  const { isAuthenticated, isLoading, login } = useAuth()
+
+  if (isLoading.value) return true
+
+  if (!isAuthenticated()) {
+    login()
+    return false
+  }
+
+  return true
 })
 
 export default router

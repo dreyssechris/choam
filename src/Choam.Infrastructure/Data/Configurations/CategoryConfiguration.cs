@@ -8,8 +8,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.HasIndex(c => c.Name).IsUnique();
-
-        builder.HasData(new Category { Id = 1, Name = "Uncategorized" });
+        builder.HasIndex(c => new { c.UserId, c.Name }).IsUnique();
     }
 }
