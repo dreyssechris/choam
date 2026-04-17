@@ -30,7 +30,8 @@ builder.Services
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = false,
+            ValidateAudience = true,
+            ValidAudiences = new[] { keycloakSection["Audience"]!, "account" },
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             RoleClaimType = "roles"
