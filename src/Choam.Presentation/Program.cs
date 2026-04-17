@@ -41,14 +41,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// --- Ollama HTTP Client ---
-builder.Services.AddHttpClient<IOllamaClient, OllamaClient>(client =>
-{
-    var ollamaUrl = builder.Configuration.GetValue<string>("Ollama:Url") ?? "http://localhost:11434";
-    client.BaseAddress = new Uri(ollamaUrl);
-    client.Timeout = TimeSpan.FromMinutes(5);
-});
-
 // --- ASP.NET Core Services ---
 builder.Services
     .AddControllers()

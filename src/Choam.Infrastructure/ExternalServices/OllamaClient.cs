@@ -3,8 +3,9 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Choam.Application.Dtos;
 using Choam.Application.Interfaces;
+using Microsoft.Extensions.Configuration;
 
-namespace Choam.Presentation.Services;
+namespace Choam.Infrastructure.ExternalServices;
 
 public sealed class OllamaClient(HttpClient httpClient, IConfiguration config) : IOllamaClient
 {
