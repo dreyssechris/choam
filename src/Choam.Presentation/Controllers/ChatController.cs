@@ -4,6 +4,7 @@ using Choam.Application.Dtos;
 using Choam.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Choam.Presentation.Controllers;
 
@@ -13,6 +14,8 @@ namespace Choam.Presentation.Controllers;
 public class ChatController(IChatService chatService) : ControllerBase
 {
     [HttpPost]
+    [EnableRateLimiting("chat")]
+    [RequestSizeLimit(32 * 1024)]
     public async Task SendMessage(ChatRequestDto request, CancellationToken ct)
     {
         Response.ContentType = "text/event-stream";

@@ -9,4 +9,5 @@ public record TransactionReadDto(
     string Description,
     DateTime Date,
     TransactionType Type,
-    int CategoryId);
+    int CategoryId
+);

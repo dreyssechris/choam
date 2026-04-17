@@ -1,5 +1,7 @@
+using Choam.Application.Interfaces;
 using Choam.Domain.Interfaces;
 using Choam.Infrastructure.Data;
+using Choam.Infrastructure.ExternalServices;
 using Choam.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,13 @@ public static class DependencyInjection
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IAppUserRepository, AppUserRepository>();
+
+        services.AddHttpClient<IOllamaClient, OllamaClient>(client =>
+        {
+            var ollamaUrl = configuration.GetValue<string>("Ollama:Url") ?? "http://localhost:11434";
+            client.BaseAddress = new Uri(ollamaUrl);
+            client.Timeout = TimeSpan.FromMinutes(5);
+        });
 
         return services;
     }

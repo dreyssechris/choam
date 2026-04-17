@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Choam.Application;
 using Choam.Application.Interfaces;
 using Choam.Infrastructure;
@@ -7,6 +8,7 @@ using Choam.Presentation.Middleware;
 using Choam.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -30,7 +32,8 @@ builder.Services
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = false,
+            ValidateAudience = true,
+            ValidAudiences = new[] { keycloakSection["Audience"]!, "account" },
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             RoleClaimType = "roles"
@@ -41,12 +44,21 @@ builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// --- Ollama HTTP Client ---
-builder.Services.AddHttpClient<IOllamaClient, OllamaClient>(client =>
+// --- Rate Limiting ---
+builder.Services.AddRateLimiter(options =>
 {
-    var ollamaUrl = builder.Configuration.GetValue<string>("Ollama:Url") ?? "http://localhost:11434";
-    client.BaseAddress = new Uri(ollamaUrl);
-    client.Timeout = TimeSpan.FromMinutes(5);
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("chat", context =>
+    {
+        var userId = context.User.FindFirst("sub")?.Value ?? context.Connection.RemoteIpAddress?.ToString() ?? "anon";
+        return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0
+        });
+    });
 });
 
 // --- ASP.NET Core Services ---
@@ -88,6 +100,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.UseMiddleware<UserProvisioningMiddleware>();
 app.MapControllers();
 app.MapHealthChecks("/health");

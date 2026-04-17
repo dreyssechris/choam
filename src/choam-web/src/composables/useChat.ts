@@ -37,7 +37,7 @@ export function useChat() {
       if (result.proposal) {
         assistantMessage.proposal = result.proposal
       }
-    } catch (err) {
+    } catch {
       assistantMessage.content = 'Error: could not reach AI service.'
     } finally {
       isStreaming.value = false
